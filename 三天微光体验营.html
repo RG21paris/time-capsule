@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>高压适航测试 | 专注力审计终端</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Serif SC', serif;
+            background-color: #050505;
+            color: #d1d5db;
+            min-height: 100vh;
+            background-image: 
+                linear-gradient(rgba(0, 255, 170, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 170, 0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        .terminal-font { font-family: 'JetBrains Mono', monospace; }
+        .audit-card {
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid rgba(0, 255, 170, 0.2);
+            box-shadow: 0 0 20px rgba(0, 255, 170, 0.05);
+            position: relative;
+        }
+        .audit-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, #00ffaa, transparent);
+        }
+        .input-style {
+            background: rgba(0, 255, 170, 0.02);
+            border: 1px solid rgba(0, 255, 170, 0.2);
+            width: 100%;
+            padding: 12px 16px;
+            color: #00ffaa;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        .input-style:focus {
+            outline: none;
+            border-color: #00ffaa;
+            box-shadow: inset 0 0 10px rgba(0, 255, 170, 0.1);
+        }
+        .input-style::placeholder { color: rgba(0, 255, 170, 0.3); }
+        select.input-style option { background: #050505; color: #00ffaa; }
+        
+        .glitch-text {
+            animation: glitch 2s linear infinite;
+        }
+        @keyframes glitch {
+            2%, 64% { transform: translate(2px,0) skew(0deg); }
+            4%, 60% { transform: translate(-2px,0) skew(0deg); }
+            62% { transform: translate(0,0) skew(5deg); }
+        }
+        .sealed { display: none; }
+        .blinking-cursor {
+            display: inline-block;
+            width: 8px; height: 16px;
+            background-color: #00ffaa;
+            animation: blink 1s step-end infinite;
+            vertical-align: middle;
+            margin-left: 4px;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
+    </style>
+</head>
+<body class="p-4 sm:p-6 flex items-center justify-center relative">
+
+    <div id="main-container" class="audit-card w-full max-w-md p-6 sm:p-8 z-10">
+        <!-- Header -->
+        <div class="mb-8 border-b border-[#00ffaa]/20 pb-4">
+            <div class="flex justify-between items-center mb-2">
+                <span class="text-[10px] text-[#00ffaa] terminal-font uppercase tracking-widest border border-[#00ffaa]/30 px-2 py-0.5">System Active</span>
+                <span class="text-[10px] text-red-500 terminal-font uppercase tracking-widest glitch-text">Recording...</span>
+            </div>
+            <h1 class="text-xl font-bold tracking-widest text-white mt-4">高压适航测试</h1>
+            <p class="text-xs mt-1 opacity-60 terminal-font text-[#00ffaa]">>> 3-Day Focus Audit Terminal <span class="blinking-cursor"></span></p>
+        </div>
+
+        <!-- 说明 -->
+        <div class="mb-6 p-3 bg-red-500/10 border-l-2 border-red-500 text-xs text-gray-400 leading-relaxed">
+            <span class="text-red-400 font-bold terminal-font">WARNING:</span> 本终端仅用于真实数据审计。请如实提交今日专注数据，系统将进行底层逻辑核验。
+        </div>
+
+        <!-- 提交表单 -->
+        <form id="audit-form" action="https://formspree.io/f/xaqlbegp" method="POST" class="space-y-5">
+            <input type="hidden" name="产品类型" value="3天微光体验营打卡">
+            
+            <div>
+                <label class="text-[10px] terminal-font text-[#00ffaa]/70 block mb-1">>> 参营识别码 (企微ID)</label>
+                <input type="text" name="用户ID" placeholder="Enter your ID..." class="input-style" required>
+            </div>
+
+            <div>
+                <label class="text-[10px] terminal-font text-[#00ffaa]/70 block mb-1">>> 当前审计阶段</label>
+                <select name="审计阶段" class="input-style cursor-pointer" required>
+                    <option value="" disabled selected>Select day...</option>
+                    <option value="Day 1：观测期 (无干预)">Day 1：底层逻辑观测 (无干预)</option>
+                    <option value="Day 2：压力干预">Day 2：环境压力干预</option>
+                    <option value="Day 3：极限刺痛">Day 3：效率极限测试</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="text-[10px] terminal-font text-[#00ffaa]/70 block mb-1">>> 今日有效专注时长 (小时)</label>
+                <input type="number" step="0.1" name="专注时长" placeholder="e.g. 2.5" class="input-style" required>
+            </div>
+
+            <div>
+                <label class="text-[10px] terminal-font text-[#00ffaa]/70 block mb-1">>> 导致中断的【核心Bug】</label>
+                <textarea name="核心Bug" rows="2" placeholder="刷手机？情绪内耗？还是计划不合理？" class="input-style" required></textarea>
+            </div>
+
+            <button type="submit" id="submit-btn" class="w-full py-3 mt-4 bg-transparent border border-[#00ffaa] text-[#00ffaa] terminal-font text-sm uppercase tracking-[0.2em] hover:bg-[#00ffaa] hover:text-black transition-all duration-300">
+                <span id="btn-text">[ Initiate Data Upload ]</span>
+                <span id="loading" class="hidden animate-pulse">Uploading to Paris HQ...</span>
+            </button>
+        </form>
+    </div>
+
+    <!-- 成功界面 -->
+    <div id="success-message" class="sealed text-center audit-card w-full max-w-md p-10 z-10">
+        <div class="mb-4 text-4xl text-[#00ffaa] terminal-font">✓</div>
+        <h2 class="text-lg font-bold mb-2 text-white terminal-font">DATA LOGGED</h2>
+        <p class="text-xs opacity-60 leading-relaxed mb-6 terminal-font text-[#00ffaa]">
+            > 数据已同步至控制中心.<br>
+            > 审计算法运行中...<br><br>
+            请关闭此页面，等待主理人次日反馈。
+        </p>
+        <button onclick="location.reload()" class="text-[10px] terminal-font text-gray-500 hover:text-white transition-colors border-b border-gray-700 pb-1">Return to Terminal</button>
+    </div>
+
+    <script>
+        const form = document.getElementById('audit-form');
+        const btnText = document.getElementById('btn-text');
+        const loading = document.getElementById('loading');
+
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            btnText.style.display = 'none';
+            loading.classList.remove('hidden');
+
+            const formData = new FormData(form);
+            
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: { 'Accept': 'application/json' }
+                });
+
+                if (response.ok) {
+                    document.getElementById('main-container').classList.add('sealed');
+                    document.getElementById('success-message').classList.remove('sealed');
+                } else {
+                    alert('Error: Data transfer failed.');
+                    btnText.style.display = 'inline';
+                    loading.classList.add('hidden');
+                }
+            } catch (error) {
+                alert('Error: Network timeout.');
+                btnText.style.display = 'inline';
+                loading.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
