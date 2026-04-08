@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L4 季度护航 | 巴黎黑曜石终端</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Serif+SC:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Serif SC', serif;
+            background-color: #0a0a0a;
+            color: #e5e4e2; /* 铂金色 */
+            min-height: 100vh;
+        }
+        .cinzel-font { font-family: 'Cinzel', serif; }
+        .obsidian-card {
+            background: linear-gradient(145deg, #111 0%, #050505 100%);
+            border: 1px solid #2a2a2a;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            position: relative;
+        }
+        .input-style {
+            background: rgba(0, 0, 0, 0.5);
+            border: none;
+            border-bottom: 1px solid #333;
+            width: 100%;
+            padding: 16px 12px;
+            color: #e5e4e2;
+            font-size: 14px;
+            transition: all 0.5s ease;
+        }
+        .input-style:focus {
+            outline: none;
+            border-bottom: 1px solid #e5e4e2;
+            background: rgba(255, 255, 255, 0.02);
+        }
+        .input-style::placeholder { color: #444; font-weight: 300; }
+        
+        .platinum-btn {
+            background: linear-gradient(90deg, #1a1a1a 0%, #2a2a2a 50%, #1a1a1a 100%);
+            border: 1px solid #444;
+            color: #e5e4e2;
+            transition: all 0.4s ease;
+        }
+        .platinum-btn:hover {
+            background: #e5e4e2;
+            color: #000;
+            box-shadow: 0 0 20px rgba(229, 228, 226, 0.2);
+        }
+        .sealed { display: none; }
+        .watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 150px;
+            color: rgba(255, 255, 255, 0.01);
+            z-index: 0;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-8 flex items-center justify-center relative">
+
+    <div id="main-container" class="obsidian-card w-full max-w-lg p-10 sm:p-12 z-10 rounded-sm">
+        <div class="watermark cinzel-font">L4</div>
+        
+        <!-- Header -->
+        <div class="mb-10 text-center relative z-10">
+            <div class="cinzel-font text-[10px] tracking-[0.4em] text-[#888] mb-4 uppercase">
+                Obsidian Quarterly Access
+            </div>
+            <h1 class="text-3xl font-light tracking-[0.1em] text-[#e5e4e2] mb-3">季度护航专线</h1>
+            <div class="w-12 h-[1px] bg-[#e5e4e2] mx-auto opacity-30"></div>
+        </div>
+
+        <div class="mb-10 text-xs text-[#888] font-light leading-loose text-center relative z-10">
+            "We guard your time as we guard our honor."<br>
+            巴黎总部已为您开启 90 天专属通道。
+        </div>
+
+        <!-- 提交表单 -->
+        <form id="audit-form" action="https://formspree.io/f/xaqlbegp" method="POST" class="space-y-8 relative z-10">
+            <input type="hidden" name="产品类型" value="L4黑曜石季度护航">
+            
+            <div>
+                <label class="cinzel-font text-[10px] text-[#e5e4e2]/60 block mb-2 tracking-[0.2em] uppercase">Private ID / 尊享识别码</label>
+                <input type="text" name="用户ID" placeholder="请输入您的黑卡编号..." class="input-style" required>
+            </div>
+
+            <div>
+                <label class="cinzel-font text-[10px] text-[#e5e4e2]/60 block mb-2 tracking-[0.2em] uppercase">Weekly Milestone / 本周里程碑</label>
+                <textarea name="本周核心里程碑" rows="2" placeholder="这 7 天内，我们需要共同拿下的绝对高地是..." class="input-style" required></textarea>
+            </div>
+
+            <div>
+                <label class="cinzel-font text-[10px] text-[#e5e4e2]/60 block mb-2 tracking-[0.2em] uppercase">Concierge Request / 礼宾部专属诉求</label>
+                <textarea name="专属支持诉求" rows="2" placeholder="需要主理人团队为您额外调配什么资源？(如：情绪疏导 / 靶向题库 / 深度复盘)" class="input-style" required></textarea>
+            </div>
+
+            <button type="submit" id="submit-btn" class="w-full py-5 mt-8 platinum-btn cinzel-font font-bold text-xs uppercase tracking-[0.3em]">
+                <span id="btn-text">Authorize Transmission</span>
+                <span id="loading" class="hidden animate-pulse">Establishing Secure Line...</span>
+            </button>
+        </form>
+    </div>
+
+    <!-- 成功界面 -->
+    <div id="success-message" class="sealed text-center obsidian-card w-full max-w-lg p-16 z-10 rounded-sm">
+        <div class="mb-8 text-4xl text-[#e5e4e2] font-light">⚜️</div>
+        <h2 class="text-xl font-light mb-4 text-[#e5e4e2] tracking-[0.2em] cinzel-font uppercase">Message Received</h2>
+        <p class="text-xs opacity-60 leading-loose mb-10 text-[#888] font-light">
+            总部已接收您的季度护航指令。<br>
+            您的专属 L-Coach 将在 15 分钟内响应。<br><br>
+            致以最高敬意。
+        </p>
+        <div class="w-8 h-[1px] bg-[#e5e4e2] mx-auto opacity-20"></div>
+    </div>
+
+    <script>
+        const form = document.getElementById('audit-form');
+        const btnText = document.getElementById('btn-text');
+        const loading = document.getElementById('loading');
+
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            btnText.style.display = 'none';
+            loading.classList.remove('hidden');
+
+            const formData = new FormData(form);
+            
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: { 'Accept': 'application/json' }
+                });
+
+                if (response.ok) {
+                    document.getElementById('main-container').classList.add('sealed');
+                    document.getElementById('success-message').classList.remove('sealed');
+                } else {
+                    alert('Line busy. Please try again.');
+                    btnText.style.display = 'inline';
+                    loading.classList.add('hidden');
+                }
+            } catch (error) {
+                alert('Connection timeout.');
+                btnText.style.display = 'inline';
+                loading.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
