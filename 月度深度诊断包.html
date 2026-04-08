@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L-Coach 月度深度诊断 | 预约终端</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Serif SC', serif;
+            background-color: #0f1115; /* 更深邃的黑灰底色 */
+            color: #e2e8f0;
+            min-height: 100vh;
+        }
+        .clinic-card {
+            background: linear-gradient(180deg, #1a1d24 0%, #13151a 100%);
+            border: 1px solid #2d3748;
+            border-top: 4px solid #d4af37; /* 尊贵金顶边 */
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+        .input-style {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid #4a5568;
+            width: 100%;
+            padding: 12px 16px;
+            color: #f7fafc;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        .input-style:focus {
+            outline: none;
+            border-color: #d4af37;
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
+        }
+        .input-style::placeholder { color: #718096; }
+        select.input-style option { background: #1a1d24; color: #e2e8f0; }
+        .sealed { display: none; }
+        .gold-text { color: #d4af37; }
+    </style>
+</head>
+<body class="p-4 sm:p-6 flex items-center justify-center relative overflow-hidden">
+
+    <!-- 背景装饰 -->
+    <div class="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
+        <div class="absolute -top-20 -right-20 w-64 h-64 bg-[#d4af37] opacity-5 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-10 -left-10 w-48 h-48 bg-[#4a5568] opacity-20 rounded-full blur-2xl"></div>
+    </div>
+
+    <div id="main-container" class="clinic-card w-full max-w-md p-8 relative z-10 rounded-xl">
+        <!-- Header -->
+        <div class="mb-8 border-b border-gray-700 pb-6 text-center">
+            <div class="inline-block px-3 py-1 bg-[#d4af37]/10 border border-[#d4af37]/30 rounded-full text-[10px] uppercase tracking-widest text-[#d4af37] mb-4">
+                Advanced Trial & Audit
+            </div>
+            <h1 class="text-2xl font-bold tracking-widest text-white mb-2">月度深度诊断包</h1>
+            <p class="text-xs text-gray-500 uppercase tracking-widest">L-Coach + 总督导 双审建档</p>
+        </div>
+
+        <!-- 交付说明 -->
+        <div class="mb-8 text-sm text-gray-400 leading-relaxed bg-[#1a202c] p-5 rounded-lg border border-gray-700">
+            <p class="mb-3 flex items-start gap-2"><span class="text-lg">👥</span> <span><strong class="text-gray-200">双主审视频连线：</strong>60分钟 (主教练 + 总督导)</span></p>
+            <p class="mb-3 flex items-start gap-2"><span class="text-lg">⏳</span> <span><strong class="text-gray-200">标准陪跑体验：</strong>7天专属跟进试运转</span></p>
+            <p class="mb-2 flex items-start gap-2"><span class="text-lg">📄</span> <span><strong class="text-gray-200">权威交付物：</strong>完整版《学业底层系统诊断报告》</span></p>
+            <div class="mt-4 pt-4 border-t border-gray-700 text-xs text-[#d4af37] font-bold text-center">
+                ※ 本诊断费用可 100% 抵扣 L2/L3 领航计划首月费用
+            </div>
+        </div>
+
+        <!-- 提交表单 -->
+        <form id="clinic-form" action="https://formspree.io/f/xaqlbegp" method="POST" class="space-y-6">
+            <input type="hidden" name="产品类型" value="699元深度诊断包预约">
+            
+            <div>
+                <label class="text-xs font-bold text-gray-400 block mb-2">受诊人企微 ID</label>
+                <input type="text" name="用户ID" placeholder="请输入绑定的企微昵称..." class="input-style" required>
+            </div>
+
+            <div>
+                <label class="text-xs font-bold text-gray-400 block mb-2">过去三个月，最顽固的“核心卡点”是什么？</label>
+                <textarea name="核心痛点" rows="3" placeholder="例如：尝试过很多次做计划，但遇到阻力就容易放弃，伴随严重的自我怀疑..." class="input-style" required></textarea>
+            </div>
+
+            <div>
+                <label class="text-xs font-bold text-gray-400 block mb-2">期望在接下来的“7天陪跑试运转”中得到什么？</label>
+                <input type="text" name="期望目标" placeholder="例如：希望能有一套强有力的外部监督机制..." class="input-style" required>
+            </div>
+
+            <div>
+                <label class="text-xs font-bold text-gray-400 block mb-2">意向双审连线时间 (需协调两位导师档期)</label>
+                <select name="预约时间" class="input-style cursor-pointer" required>
+                    <option value="" disabled selected>请选择优先时段...</option>
+                    <option value="周五 晚上 (20:00 - 22:00)">周五 晚上 (20:00 - 22:00)</option>
+                    <option value="周六 上午 (10:00 - 12:00)">周六 上午 (10:00 - 12:00)</option>
+                    <option value="周日 下午 (14:00 - 18:00)">周日 下午 (14:00 - 18:00)</option>
+                </select>
+            </div>
+
+            <button type="submit" id="submit-btn" class="w-full py-4 mt-6 bg-[#d4af37] text-black font-bold tracking-widest hover:bg-white transition-all duration-300 rounded-lg shadow-[0_0_20px_rgba(212,175,55,0.2)]">
+                <span id="btn-text">提交案卷 · 启动诊断</span>
+                <span id="loading" class="hidden animate-pulse">正在传输加密档案...</span>
+            </button>
+        </form>
+    </div>
+
+    <!-- 成功界面 -->
+    <div id="success-message" class="sealed text-center clinic-card w-full max-w-md p-12 z-10 rounded-xl">
+        <div class="mb-6 text-5xl text-[#d4af37]">🛡️</div>
+        <h2 class="text-xl font-bold mb-3 text-white">庭前档案已建档</h2>
+        <p class="text-sm text-gray-400 leading-relaxed mb-8">
+            总督导与 L-Coach 已收到你的案卷数据。<br><br>
+            请返回微信私聊主理人，<br>
+            确认最终的 60 分钟双审连线时间，<br>
+            并开启你的 7 天试运转。
+        </p>
+    </div>
+
+    <script>
+        const form = document.getElementById('clinic-form');
+        const btnText = document.getElementById('btn-text');
+        const loading = document.getElementById('loading');
+
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            btnText.style.display = 'none';
+            loading.classList.remove('hidden');
+
+            const formData = new FormData(form);
+            
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: { 'Accept': 'application/json' }
+                });
+
+                if (response.ok) {
+                    document.getElementById('main-container').classList.add('sealed');
+                    document.getElementById('success-message').classList.remove('sealed');
+                } else {
+                    alert('网络连接错误，请重试');
+                    btnText.style.display = 'inline';
+                    loading.classList.add('hidden');
+                }
+            } catch (error) {
+                alert('请求超时，请检查网络');
+                btnText.style.display = 'inline';
+                loading.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
