@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>辛迪加 | 顶级指令终端</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Noto+Serif+SC:wght@700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Serif SC', serif;
+            background-color: #050505;
+            color: #f1f5f9;
+            min-height: 100vh;
+        }
+        .terminal-font { font-family: 'JetBrains Mono', monospace; }
+        .syndicate-card {
+            background: linear-gradient(180deg, #120a0a 0%, #050505 100%);
+            border: 1px solid #333;
+            border-top: 4px solid #dc2626; 
+            box-shadow: 0 20px 60px rgba(220, 38, 38, 0.1);
+        }
+        .input-style {
+            background: #0a0a0a;
+            border: 1px solid #333;
+            width: 100%;
+            padding: 14px 16px;
+            color: #e5e5e5;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+        }
+        .input-style:focus {
+            outline: none;
+            border-color: #dc2626;
+        }
+        .sos-toggle { display: none; }
+        .sos-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            border: 2px dashed #444;
+            color: #888;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .sos-toggle:checked + .sos-label {
+            background: rgba(220, 38, 38, 0.1);
+            border-color: #dc2626;
+            color: #dc2626;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse { 50% { opacity: 0.5; } }
+        .sealed { display: none; }
+    </style>
+</head>
+<body class="p-4 sm:p-6 flex items-center justify-center">
+
+    <div id="main-container" class="syndicate-card w-full max-w-md p-8 sm:p-10 z-10 rounded-lg">
+        
+        <div class="mb-8 border-b border-[#333] pb-6 text-center">
+            <span class="text-[10px] text-[#dc2626] terminal-font uppercase tracking-widest bg-[#dc2626]/10 px-2 py-1 mb-4 inline-block">最高级别通道</span>
+            <h1 class="text-2xl font-black tracking-widest text-white mt-2">顶级指令终端</h1>
+        </div>
+
+        <form id="audit-form" action="https://formspree.io/f/xaqlbegp" method="POST" class="space-y-6">
+            <input type="hidden" name="产品类型" value="辛迪加顶级冲刺指令">
+            
+            <div>
+                <label class="text-[10px] terminal-font text-gray-500 block mb-2 uppercase tracking-widest">>> 成员 ID</label>
+                <input type="text" name="用户ID" placeholder="请输入 ID..." class="input-style" required>
+            </div>
+
+            <div>
+                <label class="text-[10px] terminal-font text-gray-500 block mb-2 uppercase tracking-widest">>> 连线申请</label>
+                <select name="预约时间" class="input-style cursor-pointer" required>
+                    <option value="" disabled selected>选择时间段...</option>
+                    <option value="中午 (12:30 - 13:30)">中午 (12:30 - 13:30)</option>
+                    <option value="傍晚 (17:30 - 18:30)">傍晚 (17:30 - 18:30)</option>
+                    <option value="深夜 (22:00 - 23:00)">深夜 (22:00 - 23:00)</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="text-[10px] terminal-font text-gray-500 block mb-2 uppercase tracking-widest">>> 今日核心交付</label>
+                <textarea name="今日最高优主线" rows="2" placeholder="汇报今日必须拿下的硬核成果..." class="input-style" required></textarea>
+            </div>
+
+            <div class="mt-8">
+                <input type="checkbox" id="sos-trigger" name="SOS_激活" value="是" class="sos-toggle">
+                <label for="sos-trigger" class="sos-label rounded-lg terminal-font text-sm">
+                    ⚠️ 激活 S.O.S 极速干预
+                </label>
+            </div>
+
+            <button type="submit" id="submit-btn" class="w-full py-4 mt-6 bg-[#dc2626] text-white terminal-font font-bold text-sm uppercase tracking-widest hover:bg-white hover:text-black transition-all duration-300">
+                <span id="btn-text">回传指令数据</span>
+                <span id="loading" class="hidden animate-pulse">正在传输...</span>
+            </button>
+        </form>
+    </div>
+
+    <div id="success-message" class="sealed text-center syndicate-card w-full max-w-md p-12 z-10 rounded-lg">
+        <div class="mb-4 text-5xl text-[#dc2626]">♦</div>
+        <h2 class="text-xl font-black mb-2 text-white">指令已锁定</h2>
+        <p class="text-xs opacity-80 leading-relaxed text-gray-400 terminal-font">
+            > 资源已调度.<br>
+            > 请按约定时间接入连线。
+        </p>
+    </div>
+
+    <script>
+        // 自动读取 URL 里的 id 参数并填入输入框锁定
+        const urlParams = new URLSearchParams(window.location.search);
+        const userId = urlParams.get('id');
+        if(userId) {
+            const idInput = document.querySelector('input[name="用户ID"]');
+            if(idInput) {
+                idInput.value = decodeURIComponent(userId);
+                idInput.readOnly = true;
+                idInput.style.opacity = '0.5';
+                idInput.style.cursor = 'not-allowed';
+            }
+        }
+
+        const form = document.getElementById('audit-form');
+        const btnText = document.getElementById('btn-text');
+        const loading = document.getElementById('loading');
+
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            btnText.style.display = 'none';
+            loading.classList.remove('hidden');
+
+            const formData = new FormData(form);
+            
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: { 'Accept': 'application/json' }
+                });
+
+                if (response.ok) {
+                    document.getElementById('main-container').classList.add('sealed');
+                    document.getElementById('success-message').classList.remove('sealed');
+                } else {
+                    alert('回传失败');
+                    btnText.style.display = 'inline';
+                    loading.classList.add('hidden');
+                }
+            } catch (error) {
+                alert('超时');
+                btnText.style.display = 'inline';
+                loading.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
