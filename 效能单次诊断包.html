@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L-Coach 效能单次诊断 | 预约终端</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Serif SC', serif;
+            background-color: #f8f9fa;
+            color: #2d3748;
+            min-height: 100vh;
+        }
+        .clinic-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-top: 4px solid #4a5568;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+        .input-style {
+            background: #fdfdfd;
+            border: 1px solid #cbd5e0;
+            width: 100%;
+            padding: 12px 16px;
+            color: #2d3748;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        .input-style:focus {
+            outline: none;
+            border-color: #4a5568;
+            box-shadow: 0 0 0 3px rgba(74, 85, 104, 0.1);
+        }
+        .sealed { display: none; }
+    </style>
+</head>
+<body class="p-4 sm:p-6 flex items-center justify-center">
+
+    <div id="main-container" class="clinic-card w-full max-w-md p-8 relative z-10">
+        <!-- Header -->
+        <div class="mb-8 border-b border-gray-200 pb-6 text-center">
+            <h1 class="text-2xl font-bold tracking-widest text-gray-800 mb-2">L-Coach 效能诊断</h1>
+            <p class="text-xs text-gray-500 uppercase tracking-widest">Pre-consultation Intake Form</p>
+        </div>
+
+        <!-- 说明 -->
+        <div class="mb-6 text-sm text-gray-600 leading-relaxed bg-gray-50 p-4 rounded border border-gray-100">
+            <p class="mb-2"><span class="font-bold">⏱️ 连线时长：</span>45 分钟 (1v1 视频)</p>
+            <p class="mb-2"><span class="font-bold">📄 交付物：</span>《学情痛点定位表》</p>
+            <p class="text-xs text-gray-400 mt-3 border-t pt-3">为保证连线效率，请在支付 399 元诊断费后，如实填写以下“庭前问卷”，主理人将提前进行底层逻辑分析。</p>
+        </div>
+
+        <!-- 提交表单 -->
+        <form id="clinic-form" action="https://formspree.io/f/xaqlbegp" method="POST" class="space-y-5">
+            <input type="hidden" name="产品类型" value="399元单次诊断包预约">
+            
+            <div>
+                <label class="text-xs font-bold text-gray-700 block mb-2">预约人识别码 (企微ID)</label>
+                <input type="text" name="用户ID" placeholder="请输入你的企微昵称..." class="input-style" required>
+            </div>
+
+            <div>
+                <label class="text-xs font-bold text-gray-700 block mb-2">当前最大的“效能卡点”是什么？</label>
+                <textarea name="核心痛点" rows="3" placeholder="例如：每天计划排得很满，但到了晚上发现核心任务都没推进，陷入深深的内耗..." class="input-style" required></textarea>
+            </div>
+
+            <div>
+                <label class="text-xs font-bold text-gray-700 block mb-2">本次 45 分钟连线，你最渴望解决的一个问题？</label>
+                <input type="text" name="期望目标" placeholder="只能写一个最核心的问题" class="input-style" required>
+            </div>
+
+            <div>
+                <label class="text-xs font-bold text-gray-700 block mb-2">意向连线时间</label>
+                <select name="预约时间" class="input-style cursor-pointer" required>
+                    <option value="" disabled selected>请选择方便的连线时段...</option>
+                    <option value="工作日 晚上 (20:00 - 22:00)">工作日 晚上 (20:00 - 22:00)</option>
+                    <option value="周末 上午 (10:00 - 12:00)">周末 上午 (10:00 - 12:00)</option>
+                    <option value="周末 下午 (14:00 - 18:00)">周末 下午 (14:00 - 18:00)</option>
+                </select>
+            </div>
+
+            <button type="submit" id="submit-btn" class="w-full py-3 mt-4 bg-gray-800 text-white font-bold tracking-widest hover:bg-black transition-all duration-300 rounded">
+                <span id="btn-text">提交问卷 · 锁定档期</span>
+                <span id="loading" class="hidden animate-pulse">资料传输中...</span>
+            </button>
+        </form>
+    </div>
+
+    <!-- 成功界面 -->
+    <div id="success-message" class="sealed text-center clinic-card w-full max-w-md p-10 z-10">
+        <div class="mb-4 text-4xl text-gray-800">📋</div>
+        <h2 class="text-lg font-bold mb-2 text-gray-800">庭前问卷已归档</h2>
+        <p class="text-sm text-gray-600 leading-relaxed mb-6">
+            你的病灶数据已进入主理人分析库。<br><br>
+            请返回微信私聊主理人，确认最终的 45 分钟视频连线时间。
+        </p>
+    </div>
+
+    <script>
+        const form = document.getElementById('clinic-form');
+        const btnText = document.getElementById('btn-text');
+        const loading = document.getElementById('loading');
+
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            btnText.style.display = 'none';
+            loading.classList.remove('hidden');
+
+            const formData = new FormData(form);
+            
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: { 'Accept': 'application/json' }
+                });
+
+                if (response.ok) {
+                    document.getElementById('main-container').classList.add('sealed');
+                    document.getElementById('success-message').classList.remove('sealed');
+                } else {
+                    alert('网络连接错误，请重试');
+                    btnText.style.display = 'inline';
+                    loading.classList.add('hidden');
+                }
+            } catch (error) {
+                alert('请求超时，请检查网络');
+                btnText.style.display = 'inline';
+                loading.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
