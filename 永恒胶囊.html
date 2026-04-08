@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Éternel 永恒胶囊 | 年度星轨</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Serif SC', serif;
+            background: radial-gradient(circle at bottom left, #1a1605 0%, #000000 100%);
+            min-height: 100vh;
+            color: #d4af37;
+        }
+        .eternal-card {
+            background: rgba(20, 20, 20, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 28px;
+            box-shadow: 0 0 50px rgba(212, 175, 55, 0.05);
+        }
+        .input-style {
+            background: transparent;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+            width: 100%;
+            padding: 12px 0;
+            color: #fff;
+            transition: all 0.4s;
+        }
+        .input-style:focus {
+            outline: none;
+            border-color: #d4af37;
+            text-shadow: 0 0 8px rgba(212, 175, 55, 0.5);
+        }
+        .postcard-section {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(0,0,0,0) 100%);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            position: relative;
+        }
+        .sealed { display: none; }
+        .gold-glow {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            background: #d4af37;
+            filter: blur(100px);
+            opacity: 0.15;
+            z-index: 0;
+        }
+    </style>
+</head>
+<body class="p-6 flex items-center justify-center relative overflow-x-hidden">
+    
+    <div class="gold-glow top-10 right-10"></div>
+    <div class="gold-glow bottom-10 left-10"></div>
+
+    <div id="main-container" class="eternal-card w-full max-w-md p-8 relative z-10">
+        <div class="text-center mb-10">
+            <div class="inline-block px-4 py-1 border border-[#d4af37] rounded-full text-[10px] uppercase tracking-[0.3em] mb-4">
+                Annual Collector Edition
+            </div>
+            <h1 class="text-3xl font-bold tracking-[0.2em] mb-2 text-white">Éternel 永恒胶囊</h1>
+            <p class="text-xs opacity-50 italic">—— 跨越八千公里的时光守候 ——</p>
+        </div>
+
+        <!-- 巴黎明信片权益说明 -->
+        <div class="postcard-section rounded-2xl p-5 mb-8 relative overflow-hidden">
+            <div class="flex items-start gap-4">
+                <span class="text-3xl">✉️</span>
+                <div>
+                    <h3 class="text-sm font-bold text-white mb-1">巴黎实地手写明信片</h3>
+                    <p class="text-[10px] leading-relaxed opacity-70">每月25日，我们将从巴黎总部寄出一份盖有火漆印的专属寄语。请务必填写准确地址。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 提交表单 -->
+        <form id="capsule-form" action="https://formspree.io/f/xaqlbegp" method="POST" class="space-y-6">
+            <input type="hidden" name="产品等级" value="永恒胶囊 Éternel">
+            
+            <div>
+                <label class="text-[10px] uppercase tracking-widest opacity-50">1. 年度星轨愿景</label>
+                <input type="text" name="年度愿景" placeholder="这一年，你希望在星图上留下怎样的轨迹？" class="input-style" required>
+            </div>
+
+            <div>
+                <label class="text-[10px] uppercase tracking-widest opacity-50">2. 明信片收件地址 (含邮编)</label>
+                <textarea name="收件地址" rows="2" placeholder="省、市、区、具体街道、门牌号及邮编" class="input-style" required></textarea>
+            </div>
+
+            <div>
+                <label class="text-[10px] uppercase tracking-widest opacity-50">3. 收件人姓名与联系电话</label>
+                <input type="text" name="收件人信息" placeholder="用于纸质信件的精准投递" class="input-style" required>
+            </div>
+
+            <div>
+                <label class="text-[10px] uppercase tracking-widest opacity-50">4. 给一年后自己的一句密语</label>
+                <input type="text" name="年度密语" placeholder="当这颗恒星转完一周，你想听到什么？" class="input-style" required>
+            </div>
+
+            <button type="submit" id="submit-btn" class="w-full py-4 mt-6 bg-[#d4af37] text-black rounded-full font-bold tracking-[0.2em] hover:bg-white transition-all duration-700 shadow-[0_0_30px_rgba(212,175,55,0.3)]">
+                <span id="btn-text">激活永恒权益</span>
+                <span id="loading" class="hidden animate-pulse">正在链接巴黎总站...</span>
+            </button>
+        </form>
+    </div>
+
+    <!-- 成功界面 -->
+    <div id="success-message" class="sealed text-center eternal-card p-12 max-w-md z-10">
+        <div class="mb-8 text-5xl">✨</div>
+        <h2 class="text-2xl font-bold mb-4 text-white">契约已成</h2>
+        <p class="text-sm opacity-80 leading-relaxed mb-8">
+            您的账户已正式激活 <br>
+            <span class="text-[#d4af37] font-bold text-lg">200元 领航抵扣金</span><br>
+            (可直接抵扣 L2 核心服务月费)<br><br>
+            信件已飞越 8000 公里。<br>
+            请静候来自巴黎的火漆印记。
+        </p>
+        <div class="pt-6 border-t border-white/10">
+            <p class="text-[10px] opacity-40">咨询抵扣金使用请私聊“左岸观察员”</p>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('capsule-form');
+        const btnText = document.getElementById('btn-text');
+        const loading = document.getElementById('loading');
+
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            btnText.style.display = 'none';
+            loading.classList.remove('hidden');
+
+            const formData = new FormData(form);
+            
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: { 'Accept': 'application/json' }
+                });
+
+                if (response.ok) {
+                    document.getElementById('main-container').classList.add('sealed');
+                    document.getElementById('success-message').classList.remove('sealed');
+                } else {
+                    alert('时空信号微弱，请重试');
+                    btnText.style.display = 'inline';
+                    loading.classList.add('hidden');
+                }
+            } catch (error) {
+                alert('连接超时');
+                btnText.style.display = 'inline';
+                loading.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
