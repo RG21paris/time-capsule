@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>一份来自巴黎的惊喜</title>
+    <style>
+        :root {
+            --bg-color: #f0f0f0;
+            --envelope-color: #fdfbf7;
+            --wax-color: #b91c1c;
+            --paris-night: #020617;
+            --postbox-yellow: #eab308;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 手机竖屏容器 */
+        .phone-container {
+            width: 100%;
+            height: 100%;
+            max-width: 500px;
+            background: #000;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 初始引导层 - 解决微信浏览器限制 */
+        #start-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 200;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            cursor: pointer;
+            transition: opacity 0.8s ease;
+        }
+        .start-icon {
+            width: 70px;
+            height: 70px;
+            border: 2px solid #fcd34d;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.8; box-shadow: 0 0 0 0 rgba(252, 211, 77, 0.4); }
+            70% { transform: scale(1.05); opacity: 1; box-shadow: 0 0 0 15px rgba(252, 211, 77, 0); }
+            100% { transform: scale(1); opacity: 0.8; }
+        }
+
+        /* 巴黎实景背景 */
+        .paris-real-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&q=80&w=1080');
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 2.5s ease-in-out, transform 12s ease-out;
+            z-index: 1;
+            filter: brightness(0.65);
+        }
+
+        .river-reflection {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 30%;
+            background: linear-gradient(transparent, rgba(255,255,255,0.05));
+            z-index: 2;
+            mix-blend-mode: overlay;
+            animation: wave 5s infinite alternate ease-in-out;
+            opacity: 0;
+        }
+
+        @keyframes wave { from { transform: translateY(0); } to { transform: translateY(8px); } }
+
+        /* 信封 */
+        .envelope {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(2.3); 
+            width: 200px;
+            height: 140px;
+            background: var(--envelope-color);
+            border-radius: 2px;
+            box-shadow: 0 15px 45px rgba(0,0,0,0.4);
+            z-index: 10;
+            transition: all 1.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .wax-seal {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 44px;
+            height: 44px;
+            background: var(--wax-color);
+            border-radius: 50%;
+            z-index: 12;
+            box-shadow: inset 0 0 12px rgba(0,0,0,0.5), 0 3px 6px rgba(0,0,0,0.4);
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #ffbba6;
+            font-family: "Georgia", serif;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .stamp {
+            position: absolute;
+            top: -200px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 12px;
+            background: linear-gradient(to right, #92400e, #fcd34d, #92400e);
+            border-radius: 3px;
+            z-index: 13;
+            transition: top 0.6s ease-in;
+        }
+        .stamp::before {
+            content: '';
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 24px;
+            height: 85px;
+            background: linear-gradient(to right, #3e2723, #5d4037, #211512);
+            border-radius: 12px 12px 2px 2px;
+        }
+
+        /* La Poste 邮筒 */
+        .postbox {
+            position: absolute;
+            bottom: -350px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 170px;
+            height: 280px;
+            background: var(--postbox-yellow);
+            border-radius: 18px 18px 5px 5px;
+            z-index: 20;
+            box-shadow: 0 15px 60px rgba(0,0,0,0.8);
+            transition: bottom 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+        }
+        .postbox-slot {
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 14px;
+            background: #111;
+            border-radius: 7px;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,1);
+        }
+
+        /* 结尾文案 */
+        .final-text {
+            position: absolute;
+            top: 25%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #fff;
+            text-align: center;
+            width: 100%;
+            opacity: 0;
+            z-index: 30;
+            transition: opacity 2.5s ease;
+        }
+        .title-main { font-size: 26px; letter-spacing: 8px; display: block; margin-bottom: 10px; font-weight: 300; text-shadow: 0 2px 15px rgba(0,0,0,0.5); }
+        .title-en { font-size: 13px; letter-spacing: 3px; color: #cbd5e1; display: block; margin-bottom: 35px; }
+        .waiting-text { font-size: 20px; letter-spacing: 12px; color: #fcd34d; display: block; opacity: 0; transform: translateY(20px); transition: all 1.8s ease 1.2s; }
+
+        .replay-btn {
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 40px;
+            background: rgba(255,255,255,0.08);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 35px;
+            cursor: pointer;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.5s;
+            backdrop-filter: blur(10px);
+            font-size: 14px;
+            letter-spacing: 2px;
+        }
+
+        /* 动画触发状态 */
+        .step-stamp-down .stamp { top: 50%; transform: translate(-50%, -110%); }
+        .step-wax-expand .wax-seal { transform: translate(-50%, -50%) scale(1); }
+        .step-stamp-up .stamp { top: -350px; }
+        .step-show-real .paris-real-bg { opacity: 1; transform: scale(1.1); }
+        .step-show-real .river-reflection { opacity: 1; }
+        .step-show-real .envelope { transform: translate(-50%, -200px) scale(0.42); box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+        .step-show-postbox .postbox { bottom: 0; }
+        .step-deliver .envelope { transform: translate(-50%, 125px) scale(0.22) rotateX(45deg); opacity: 0; filter: brightness(0.2); transition: all 1.8s cubic-bezier(0.5, 0, 0.5, 1); }
+        .step-final-text .final-text { opacity: 1; }
+        .step-final-text .waiting-text { opacity: 1; transform: translateY(0); }
+        .step-final-text .replay-btn { opacity: 1; pointer-events: auto; }
+    </style>
+</head>
+<body>
+
+    <div class="phone-container" id="scene">
+        <!-- 引导点击层 -->
+        <div id="start-overlay" onclick="handleStart()">
+            <div class="start-icon">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fcd34d" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                </svg>
+            </div>
+            <p style="letter-spacing: 4px; font-size: 16px; font-weight: 300;">开启来自巴黎的惊喜</p>
+        </div>
+
+        <div class="paris-real-bg"></div>
+        <div class="river-reflection"></div>
+
+        <div class="postbox">
+            <div class="postbox-slot"></div>
+            <div style="position:absolute; top:90px; width:100%; text-align:center; font-weight:900; color:#111; font-size:14px; letter-spacing:1px;">LA POSTE</div>
+        </div>
+
+        <div class="envelope" id="envelope">
+            <div class="wax-seal">D21</div>
+        </div>
+        <div class="stamp" id="stamp"></div>
+
+        <div class="final-text">
+            <span class="title-main">一份来自巴黎的惊喜</span>
+            <span class="title-en">A SURPRISE FROM PARIS</span>
+            <span class="waiting-text">等待查收</span>
+        </div>
+
+        <button class="replay-btn" onclick="startAnimation()">重新播放仪式</button>
+    </div>
+
+    <script>
+        const scene = document.getElementById('scene');
+        const overlay = document.getElementById('start-overlay');
+        let timeouts = [];
+
+        function handleStart() {
+            overlay.style.opacity = '0';
+            setTimeout(() => {
+                overlay.style.display = 'none';
+                startAnimation();
+            }, 850);
+        }
+
+        function clearAllTimeouts() {
+            timeouts.forEach(t => clearTimeout(t));
+            timeouts = [];
+        }
+
+        function resetScene() {
+            scene.className = 'phone-container';
+            void scene.offsetWidth;
+        }
+
+        function startAnimation() {
+            clearAllTimeouts();
+            resetScene();
+
+            timeouts.push(setTimeout(() => scene.classList.add('step-stamp-down'), 700));
+            timeouts.push(setTimeout(() => scene.classList.add('step-wax-expand'), 1200));
+            timeouts.push(setTimeout(() => scene.classList.add('step-stamp-up'), 2200));
+            timeouts.push(setTimeout(() => scene.classList.add('step-show-real'), 3500));
+            timeouts.push(setTimeout(() => scene.classList.add('step-show-postbox'), 4800));
+            timeouts.push(setTimeout(() => scene.classList.add('step-deliver'), 6500));
+            timeouts.push(setTimeout(() => scene.classList.add('step-final-text'), 8800));
+        }
+    </script>
+</body>
+</html>
